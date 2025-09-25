@@ -3,20 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Shield, Lock, User } from "lucide-react";
+import { Shield, Lock } from "lucide-react";
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  });
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleConnect = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login - in real app, would authenticate with backend
-    console.log("Login attempt:", credentials);
-    window.location.href = "/";
+    if (password.length >= 8) {
+      // Connect to Handcash
+      console.log("Connecting to Handcash with password:", password);
+      window.location.href = "/";
+    }
   };
+
+  const isPasswordValid = password.length >= 8;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -28,29 +29,13 @@ const Login = () => {
             <Shield className="w-8 h-8 text-primary-foreground" />
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold">MMORPG Admin</CardTitle>
+            <CardTitle className="text-2xl font-bold">Ageless Republic</CardTitle>
             <p className="text-muted-foreground mt-2">Secure access to admin panel</p>
           </div>
         </CardHeader>
         
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="Enter your username"
-                  className="pl-10"
-                  value={credentials.username}
-                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-            
+          <form onSubmit={handleConnect} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
@@ -58,22 +43,26 @@ const Login = () => {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Enter your password (min 8 characters)"
                   className="pl-10"
-                  value={credentials.password}
-                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
+                  minLength={8}
                 />
               </div>
+              {password.length > 0 && password.length < 8 && (
+                <p className="text-sm text-destructive">Password must be at least 8 characters long</p>
+              )}
             </div>
             
-            <Button type="submit" className="w-full primary-gradient gaming-shadow font-semibold">
-              Sign In
+            <Button 
+              type="submit" 
+              className="w-full primary-gradient gaming-shadow font-semibold"
+              disabled={!isPasswordValid}
+            >
+              Connect to Handcash
             </Button>
-            
-            <div className="text-center text-sm text-muted-foreground">
-              <p>Secure access • Role-based permissions</p>
-            </div>
           </form>
         </CardContent>
       </Card>
