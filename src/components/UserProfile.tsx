@@ -29,8 +29,8 @@ export const UserProfile = () => {
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'admin': return 'destructive';
-      case 'moderator': return 'secondary';
-      case 'user': return 'outline';
+      case 'user': return 'default';
+      case 'nothing': return 'secondary';
       default: return 'outline';
     }
   };
@@ -60,18 +60,11 @@ export const UserProfile = () => {
           <div className="space-y-2">
             <Label htmlFor="role-select" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
-              Configure Role
+              Role Management
             </Label>
-            <Select value={selectedRole} onValueChange={handleRoleChange}>
-              <SelectTrigger id="role-select">
-                <SelectValue placeholder="Select role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="moderator">Moderator</SelectItem>
-                <SelectItem value="user">User</SelectItem>
-              </SelectContent>
-            </Select>
+            <p className="text-sm text-muted-foreground">
+              Use the User Management page to configure roles for all users.
+            </p>
           </div>
         )}
 

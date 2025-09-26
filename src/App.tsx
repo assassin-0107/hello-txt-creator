@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { MainLayout } from "./components/layout/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import Players from "./pages/Players";
@@ -14,6 +15,7 @@ import Monitoring from "./pages/Monitoring";
 import Logs from "./pages/Logs";
 import Rewards from "./pages/Rewards";
 import News from "./pages/News";
+import UserManagement from "./pages/UserManagement";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -28,50 +30,82 @@ const App = () => (
         <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/" element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
           <Route path="/dashboard" element={
-            <MainLayout>
-              <Dashboard />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/players" element={
-            <MainLayout>
-              <Players />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Players />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/guilds" element={
-            <MainLayout>
-              <Guilds />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Guilds />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/economy" element={
-            <MainLayout>
-              <Economy />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Economy />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/events" element={
-            <MainLayout>
-              <Events />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Events />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/monitoring" element={
-            <MainLayout>
-              <Monitoring />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Monitoring />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/logs" element={
-            <MainLayout>
-              <Logs />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Logs />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/rewards" element={
-            <MainLayout>
-              <Rewards />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <Rewards />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="/news" element={
-            <MainLayout>
-              <News />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <News />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/user-management" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <MainLayout>
+                <UserManagement />
+              </MainLayout>
+            </ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
