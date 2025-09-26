@@ -1,25 +1,56 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield } from "lucide-react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
+  const navigate = useNavigate();
+  
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    const credential = credentialResponse?.credential;
+    if (!credential) {
+      console.error("No credential from Google");
+      return;
+    }
 
-  const handleGoogleSuccess = (credentialResponse: any) => {
-    console.log('Google login successful:', credentialResponse);
-    // Handle successful login
-    window.location.href = "/";
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/google`,
+        { credential },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true, // important for HttpOnly cookies
+        }
+      );
+
+      const data = res.data;
+      console.log(data);
+
+      const accessToken = data.accessToken;
+      // Example: save in app state/context
+
+      // setAuth({ accessToken, user: data.user });
+
+      navigate("/dashboard"); 
+    } catch (err: any) {
+      if (err.response) {
+        console.error("Login failed", err.response.data);
+      } else {
+        console.error("Network error during login", err.message);
+      }
+    }
   };
 
   const handleGoogleError = () => {
-    console.error('Google login failed');
+    console.error("Google login failed");
   };
 
-
   return (
-    <GoogleOAuthProvider clientId="your-google-client-id.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="absolute inset-0 gaming-gradient opacity-20"></div>
-        
+
         <Card className="w-full max-w-md card-shadow relative z-10">
           <CardHeader className="text-center space-y-4">
             <div className="w-16 h-16 mx-auto rounded-2xl primary-gradient flex items-center justify-center gaming-shadow">
@@ -30,7 +61,7 @@ const Login = () => {
               <p className="text-muted-foreground mt-2">Secure access to admin panel</p>
             </div>
           </CardHeader>
-          
+
           <CardContent>
             <div className="w-full">
               <GoogleLogin
