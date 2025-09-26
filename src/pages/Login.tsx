@@ -2,10 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield } from "lucide-react";
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   
   const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
     const credential = credentialResponse?.credential;
@@ -27,12 +29,10 @@ const Login = () => {
       const data = res.data;
       console.log(data);
 
-      const accessToken = data.accessToken;
-      // Example: save in app state/context
+      // Store auth data using context
+      login(data.user, data.accessToken);
 
-      // setAuth({ accessToken, user: data.user });
-
-      navigate("/dashboard"); 
+      navigate("/dashboard");
     } catch (err: any) {
       if (err.response) {
         console.error("Login failed", err.response.data);
